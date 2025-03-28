@@ -1,0 +1,120 @@
+.auth_form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top:50px;
+}
+.input_group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.input_wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.input {
+    display:block;
+    height:55px;
+    padding:10px 10px;
+    border:1px solid #c4c4c4;
+    border-radius: 8px;
+    background-color:#fff;
+    color:#333;
+    font-size: 15px;
+    font-weight:bold;
+    font-family: "Noto Sans KR", sans-serif;
+    box-sizing:border-box;
+    width:90%;
+}
+.input:focus {
+    border-color: #0aba16;
+    outline: none;
+}
+.input_error {
+    border-color: red;
+}
+.input_error:focus {
+    border-color: red;
+}
+.check_icon {
+    position: absolute;
+    right: 35px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.error {
+    color: red;
+    font-size: 14px;
+    text-align: center;
+    margin:10px 0;
+    white-space: pre-line;
+}
+
+.submit_button {
+    width:90%;
+    margin:0 auto;
+    text-align: center;
+    font-size:15px;
+    font-weight: bold;
+    border: none;
+    padding: 15px 50px;
+    border-radius: 8px;
+    background-color: #0710af;
+    color: #ffffff;
+    cursor: pointer;
+}
+.submit_button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+.duplicate_button {
+    background-color: #0710af;
+    color: white;
+    border: none;
+    width:140px;
+    padding: 15px 12px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-left: 10px;
+    display: inline-block; 
+}
+.duplicate_button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+.userId_list{
+    margin-bottom: 10px;
+}
+.userId_description {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #0aba16;
+    text-align: center;
+}
+.userId_container {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.userId_item {
+    background-color: #9c97f2;
+    padding: 10px 15px;
+    border-radius: 8px;
+    color: white;
+    text-align: center;
+    margin: 5px 0; 
+    width: fit-content;
+    min-width: 100px;
+    max-width: 100%; 
+    word-break: break-word;
+}
+

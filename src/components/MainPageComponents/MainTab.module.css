@@ -1,0 +1,42 @@
+.container{
+    box-shadow: 0px 0 10px rgba(0, 0, 0, 0.8);
+    z-index: 3;
+    background-color: white;
+    width: 100%;
+    position: absolute;
+    padding-top:15px;
+}
+.button_container{
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.button_container button{
+    display:flex;
+    align-items: center;
+    cursor: pointer;
+    margin:0 10px;
+    font-size:14px;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    background-color: #0d147a;;
+    font-weight:500;
+    color:white;
+}
+.button_container li {
+    list-style: none;
+    color:#555;
+    font-weight: bold;
+}
+.favorite_icon{
+    color:#ffb700;
+    font-size:14px;
+    margin-right:3px;
+}
+.around_icon{
+    color:#c9ebf8;
+    font-size:14px;
+    margin-right: 3px;
+}

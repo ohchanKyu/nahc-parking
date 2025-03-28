@@ -1,0 +1,23 @@
+.container {
+    width: 410px;
+    height:820px;
+    position: relative;
+    margin: 0 auto;
+    background-color: white;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+/* .overflow_container {
+    overflow-y: scroll; 
+}
+.container::-webkit-scrollbar {
+    width: 10px; 
+}
+.container::-webkit-scrollbar-thumb {
+    height: 30%;
+    background: #0d147a;
+    border-radius: 10px;
+}
+.container::-webkit-scrollbar-track {
+    background: rgba(79, 1, 1, 0.1);
+} */
