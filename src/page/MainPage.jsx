@@ -38,7 +38,7 @@ const MainPage = () => {
     }, [location]);
     return (
         <>
-            <SearchTab/>
+            <SearchTab location={currentLocation}/>
             {currentLocation && <KakaoMap onSet={setCoordinates} onFetch={fetchCurrentLocation} location={currentLocation}/>}
             <MainTab location={currentLocation}/>
         </>

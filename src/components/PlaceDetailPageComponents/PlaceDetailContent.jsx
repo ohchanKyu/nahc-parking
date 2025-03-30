@@ -1,180 +1,68 @@
-// import React, { useEffect, useState } from "react";
-// import { TiArrowDownThick } from "react-icons/ti";
-// import classes from "./PlaceDetailContent.module.css";
-// import { motion } from "framer-motion";
-// import { useSearchParams } from "react-router-dom";
-// import { getDetailParkingLot, getCurrentParkingLot } from "../../api/ParkingLotApiService";
+import React from "react";
+import { FaPhoneAlt, FaMapMarkerAlt, FaClock, FaCar, FaTag } from "react-icons/fa";
+import classes from "./PlaceDetailContent.module.css";
+import { MdAttachMoney } from "react-icons/md";
 
-// const PlaceDetailContent = ({setTitle}) => {
-    
-//     const [searchParams] = useSearchParams();
-//     const [detailData, setDetailData] = useState(null);
-//     const id = searchParams.get("id");
+const PlaceDetailContent = ({ item }) => {
+    const isPublicHoliday = (date) => {
+        const holidays = [
+            "01-01", "03-01", "05-05", "06-06", "08-15", "10-03", "10-09", "12-25"
+        ];
+        const formattedDate = `${(date.getMonth() + 1).toString().padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+        return holidays.includes(formattedDate);
+    };
 
-//     let weekday_start_time;
-//     let weekday_end_time;
-//     let weekend_start_time;
-//     let weekend_end_time;
-//     let holiday_start_time;
-//     let holiday_end_time;
+    const getOperatingStatus = () => {
+        const now = new Date();
+        const day = now.getDay();
+        const currentTime = now.getHours() * 60 + now.getMinutes();
 
-//     const fetchPlaceHour = (detailData) => {
-//         weekday_start_time = detailData.weekday_start_time;
-//         weekday_end_time = detailData.weekday_end_time;
+        let startTime, endTime;
+        if (day === 0 || isPublicHoliday(now)) {
+            startTime = item.holidayStartTime;
+            endTime = item.holidayEndTime;
+        } else if (day >= 1 && day <= 5) {
+            startTime = item.weekdayStartTime;
+            endTime = item.weekdayEndTime;
+        } else {
+            startTime = item.weekendStartTime;
+            endTime = item.weekendEndTime;
+        }
+        if (startTime === "00:00" && endTime === "00:00") return "운영 중";
+        const startMinutes = parseInt(startTime.split(":")[0]) * 60 + parseInt(startTime.split(":")[1]);
+        const endMinutes = parseInt(endTime.split(":")[0]) * 60 + parseInt(endTime.split(":")[1]);
 
-//         weekend_start_time = detailData.weekend_start_time;
-//         weekend_end_time = detailData.weekend_end_time;
+        return currentTime >= startMinutes && currentTime <= endMinutes ? "운영 중" : "운영 종료";
+    };
 
-//         holiday_start_time = detailData.holiday_start_time;
-//         holiday_end_time = detailData.holiday_end_time;
+    return (
+        <div className={classes.container}>
+            {item && (
+                <div className={classes.card}>
+                <h1 className={classes.title}>{item.name}</h1>
+                <div className={classes.details}>
+                    <div className={classes.info}><div><FaMapMarkerAlt className={classes.icon} />주소</div> {item.address}</div>
+                    <div className={classes.info}><div><FaTag className={classes.icon} />카테고리</div> {item.category}</div>
+                    <div className={classes.info}><div><FaTag className={classes.icon} />유형</div> {item.type}</div>
+                    <div className={classes.info}><div><FaCar className={classes.icon} />총 주차 공간</div> {item.totalSpace}대</div>
+                    <div className={classes.info}><div><FaCar className={classes.icon} />현재 주차 공간</div> {item.currentInfo}</div>
+                    <div className={classes.info}><div><FaPhoneAlt className={classes.icon} />전화번호</div> {item.phoneNumber}</div>
+                    <div className={classes.info}><div><MdAttachMoney className={classes.icon} />요금</div> {item.feeInfo}</div>
+                </div>
+                <div className={classes.operatingHours}>
+                    <h3 className={classes.fee_header}><FaClock className={classes.icon} />운영 시간</h3>
+                    {['월', '화', '수', '목', '금'].map((day) => (
+                    <div key={day} className={classes.time}><span>{day}요일</span><span>{item.weekdayStartTime} - {item.weekdayEndTime}</span></div>
+                    ))}
+                    <div className={classes.time}><span>토요일</span><span>{item.weekendStartTime} - {item.weekendEndTime}</span></div>
+                    <div className={classes.time}><span>일요일</span><span>{item.holidayStartTime} - {item.holidayEndTime}</span></div>
+                    <div className={classes.time}><span>공휴일</span><span>{item.holidayStartTime} - {item.holidayEndTime}</span></div>
+                </div>
+                <div className={`${classes.operatingStatus} ${getOperatingStatus() === '운영 중' ? classes.open : classes.closed}`}>{getOperatingStatus()}</div>
+                </div>
+            )}
+        </div>
+    );
+};
 
-//         if (weekday_start_time.trim().length === 0){
-//             detailData.weekday_start_time="00:00";
-//         }
-//         if (weekday_start_time ===  "0:00" || weekday_start_time ===  "0"){
-//             detailData.weekday_start_time="00:00";
-//         }
-//         if (weekday_end_time ===  "0:00" || weekday_end_time ===  "0"){
-//             detailData.weekday_end_time="23:59";
-//         }
-//         if (weekday_end_time.trim().length === 0){
-//             detailData.weekday_end_time="23:59";
-//         }
-
-
-//         if (weekend_start_time.trim().length === 0){
-//             detailData. weekend_start_time="00:00";
-//         }
-//         if (weekend_start_time === "0:00" || weekend_start_time ===  "0"){
-//             detailData.weekend_start_time="00:00";
-//         }
-//         if (weekend_end_time === "0:00" || weekend_end_time ===  "0"){
-//             detailData.weekend_end_time="23:59";
-//         }
-//         if (weekend_end_time.trim().length === 0){
-//             detailData.weekend_end_time="23:59";
-//         }
-
-
-//         if (holiday_start_time.trim().length === 0){
-//             detailData.holiday_start_time="00:00";
-//         }
-//         if (holiday_start_time ===  "0:00" || holiday_start_time ===  "0"){
-//             detailData.holiday_start_time="00:00";
-//         }
-//         if (holiday_end_time ===  "0:00" || holiday_end_time ===  "0"){
-//             detailData.holiday_end_time="23:59";
-//         }
-//         if (holiday_end_time.trim().length === 0){
-//             detailData.holiday_end_time="23:59";
-//         }
-//         return detailData;
-//     };
-
-//     useEffect(() => {
-//         const fetchData = async () => {
-//             try {
-//                 const detail = await getDetailParkingLot(parkingID, parkingType);
-//                 if (parkingType === "Seoul"){
-//                     const currentResponse = await getCurrentParkingLot(detail.data.address);
-//                     const currentResponseData = await currentResponse.data;
-//                     detail.data = {
-//                         ...detail.data, capacity : currentResponseData.current_capacity
-//                     }
-//                 }
-//                 setDetailData(fetchPlaceHour(detail.data));
-//                 setTitle(detail.data.parking_lot_name)
-//             } catch (error) {
-//                 console.error("Failed to fetch detail parking lot data:", error);
-//             }
-//         };
-//         fetchData();
-//     }, [parkingID, parkingType]);
-
-//     const animationVariants = {
-//         initial: { opacity: 0, x: -50 },
-//         animate: { opacity: 1, x: 0 },
-//     };
-
-//     if (!detailData) {
-//         return <div>Loading...</div>;
-//     }
-
-//     return (
-//         <React.Fragment>
-//             <motion.div
-//                 variants={animationVariants}
-//                 initial="initial"
-//                 animate="animate"
-//                 className={classes.detailContent}
-//             >
-//                 <motion.div className={classes.subContainer}>
-//                     <p className={classes.subTitle}>
-//                         주소 <TiArrowDownThick className={classes.arrow} />
-//                     </p>
-//                     <div className={classes.contentContainer}>
-//                         <div className={classes.subContent}>
-//                             {detailData.address}
-//                         </div>
-//                     </div>
-//                 </motion.div>
-
-//                 <motion.div className={classes.subContainer}>
-//                     <p className={classes.subTitle}>
-//                         운영시간
-//                         <TiArrowDownThick className={classes.arrow} />
-//                     </p>
-//                     <div className={classes.contentContainer}>
-//                         <div className={classes.subContent}>{`평일  ${detailData.weekday_start_time}~${detailData.weekday_end_time}`}</div>
-//                         <div className={classes.subContent}>{`주말  ${detailData.weekend_start_time}~${detailData.weekend_end_time}`}</div>
-//                         <div className={classes.subContent}>{`공휴일  ${detailData.holiday_start_time}~${detailData.holiday_end_time}`}</div>
-//                     </div>
-//                 </motion.div>
-
-//                 <motion.div className={classes.subContainer}>
-//                     <p className={classes.subTitle}>
-//                         가격 및 이용권
-//                         <TiArrowDownThick className={classes.arrow} />
-//                     </p>
-//                     <div className={classes.contentContainer}>
-//                         <div className={classes.leftContentContainer}>
-//                             <div className={classes.subContent}>{`기본 주차 요금 `}</div>
-//                             <div className={classes.subContent}>{`토요일 요금 구분명 `}</div>
-//                             <div className={classes.subContent}>{`공휴일 요금 구분명 `}</div>
-//                         </div>
-//                         <div className={classes.rightContentContainer}>
-//                             <div className={classes.subContent}>
-//                                 {detailData.basic_time === 0 ? "아직 정보가 없습니다" : `${detailData.basic_time}분당 ${detailData.basic_fee}원`}
-//                             </div>
-//                             <div className={classes.subContent}>{detailData.saturday_fee_type}</div>
-//                             <div className={classes.subContent}>{detailData.holiday_fee_type}</div>
-//                         </div>
-//                     </div>
-//                 </motion.div>
-
-//                 <motion.div className={classes.subContainer}>
-//                     <p className={classes.subTitle}>
-//                         주차장 정보
-//                         <TiArrowDownThick className={classes.arrow} />
-//                     </p>
-//                     <div className={classes.contentContainer}>
-//                         <div className={classes.leftContentContainer}>
-//                             <div className={classes.subContent}>{`전화번호 `}</div>
-//                             <div className={classes.subContent}>{`총 주차 구획 수 `}</div>
-//                             {parkingType === "Seoul" && <div className={classes.subContent}>{`현재 주차 구획 수`}</div>} 
-//                             <div className={classes.subContent}>{`주차장 이름  `}</div>
-//                         </div>
-//                         <div className={classes.rightContentContainer}>
-//                             <div className={classes.subContent}>{detailData.phone_number}</div>
-//                             <div className={classes.subContent}>{detailData.total_parking_space}대</div>
-//                             {parkingType === "Seoul" &&  <div className={classes.subContent}>{detailData.capacity}대</div>} 
-//                             <div className={classes.subContent}>{detailData.parking_lot_name}</div>
-//                         </div>
-//                     </div>
-//                 </motion.div>
-//             </motion.div>
-//         </React.Fragment>
-//     );
-// };
-
-// export default PlaceDetailContent;
+export default PlaceDetailContent;

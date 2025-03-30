@@ -3,7 +3,6 @@ import classes from "./KakaoMap.module.css";
 import { FaPlus } from "react-icons/fa";
 import { FaMinus } from "react-icons/fa6";
 import parkingImage from "../../assets/placeholder.png";
-import "./PlaceMarkOverlay.css";
 import { Map, MapMarker, CustomOverlayMap } from "react-kakao-maps-sdk";
 import { useNavigate } from "react-router-dom";
 import LoadingModal from "../../layout/LoadingModal";
@@ -20,6 +19,35 @@ import { getParkingLotByLevelService } from "../../api/ParkingLotService";
 import { getCoordiateByAddressService } from "../../api/LocationService";
 
 
+const isPublicHoliday = (date) => {
+    const holidays = [
+        "01-01", "03-01", "05-05", "06-06", "08-15", "10-03", "10-09", "12-25"
+    ];
+    const formattedDate = `${(date.getMonth() + 1).toString().padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+    return holidays.includes(formattedDate);
+};
+const getOperatingStatus = (parkingData) => {
+    const now = new Date();
+    const day = now.getDay();
+    const currentTime = now.getHours() * 60 + now.getMinutes();
+
+    let startTime, endTime;
+    if (day === 0 || isPublicHoliday(now)) {
+        startTime = parkingData.holidayStartTime;
+        endTime = parkingData.holidayEndTime;
+    } else if (day >= 1 && day <= 5) {
+        startTime = parkingData.weekdayStartTime;
+        endTime = parkingData.weekdayEndTime;
+    } else {
+        startTime = parkingData.weekendStartTime;
+        endTime = parkingData.weekendEndTime;
+    }
+    if (startTime === "00:00" && endTime === "00:00") return "운영 중";
+    const startMinutes = parseInt(startTime.split(":")[0]) * 60 + parseInt(startTime.split(":")[1]);
+    const endMinutes = parseInt(endTime.split(":")[0]) * 60 + parseInt(endTime.split(":")[1]);
+    return currentTime >= startMinutes && currentTime <= endMinutes ? "운영 중" : "운영 종료";
+};
+
 const { kakao } = window;
 
 const KakaoMap = (props) => {
@@ -28,20 +56,11 @@ const KakaoMap = (props) => {
     const defaultLevel = 5
     const [level, setLevel] = useState(defaultLevel);
     const [aroundParkingList,setAroundParkingList] = useState([]);
-    const [openIndices, setOpenIndices] = useState([]); 
     const [isLoading,setIsLoading] = useState(false);
     const [postPopup,setPostPopup] = useState(false);
     const loginCtx = useContext(loginContext);
 
     const navigate = useNavigate();
-    
-    const toggleOverlay = (index) => {
-        if (openIndices.includes(index)) {
-          setOpenIndices(openIndices.filter(i => i !== index));
-        } else {
-          setOpenIndices([...openIndices, index]);
-        }
-    };
 
     const popupOverlay = () => {
         setPostPopup(true);
@@ -148,18 +167,49 @@ const KakaoMap = (props) => {
         navigate(`/detail?${params}`);
     };
     
+    const EventMarkerContainer = ({ position, parkingData }) => {
+        
+        const [isVisible,setIsVisible] = useState(false);
+        
+        const toggleHandler = () => {
+            setIsVisible(prevState => !prevState);
+        };
+        
+        return (
+            <>
+                <CustomOverlayMap position={position} zIndex={900}>
+                        <div 
+                            onClick={toggleHandler}
+                            className={classes.marker_image_box}
+                        >
+                            <img src={parkingImage} className={classes.marker_image}/>
+                        </div>
+                </CustomOverlayMap>
+                <CustomOverlayMap
+                    zIndex={1000}
+                    position={position}>
+                    
+                    {isVisible && (
+                        <div style={{ zIndex : 1000 }} className={classes.customoverlay}>
+                            <p onClick={() => goDetailPlaceHandler(parkingData)}>
+                                <span className={classes.title}>{parkingData.name}</span>
+                                <span className={classes.capacity}>{`현재 주차 가능 대수 : ${parkingData.currentInfo}`}</span>
+                                <span className={`${classes.operatingStatus} ${getOperatingStatus(parkingData) === '운영 중' ? classes.open : classes.closed}`}>{getOperatingStatus(parkingData)}</span>                 </p>
+                        </div>
+                    )}
+                </CustomOverlayMap>
+            </>
+            
+        )
+    };
+
     useEffect(() => {
         const getAroundParkingList = async () => {
 
             setIsLoading(true);
             const parkingLotResponse = await getParkingLotByLevelService(props.location,level);
-            console.log(parkingLotResponse.data);
             if (parkingLotResponse.success){
                 setAroundParkingList(parkingLotResponse.data);
-                // parkingLotResponse.data.map((parkingData, index) =>{
-                //     console.log(parkingData);
-                //     console.log(index);
-                // });
                 setIsLoading(false);
             }else{
                 const errorMessage = parkingLotResponse.message;
@@ -205,40 +255,13 @@ const KakaoMap = (props) => {
                                 lng: props.location.longitude,
                                 }}
                             />
-                           {aroundParkingList.map((parkingData, index) => (
-                                <React.Fragment key={index}>
-                                <MapMarker
-                                    position={{
-                                        lat: parkingData.latitude,
-                                        lng: parkingData.longitude,
-                                    }}
-                                    image={{
-                                        src: parkingImage,
-                                        size: {
-                                            width: 39,
-                                            height: 39,
-                                        },
-                                    }}
-                                    clickable={true}
-                                    onClick={() => toggleOverlay(index)}
-                                />
-                                {openIndices.includes(index) && (
-                                    <CustomOverlayMap
-                                        position={{
-                                            lat: parkingData.latitude,
-                                            lng: parkingData.longitude,
-                                        }}
-                                    >
-                                    <div className="customoverlay">
-                                        <div onClick={() => toggleOverlay(index)} className='close'>X</div>
-                                        <p onClick={() => goDetailPlaceHandler(parkingData)}>
-                                        <span className="title">{parkingData.name}</span>
-                                        <span className="capacity">{`현재 주차 가능 대수 : ${parkingData.currentInfo}`}</span>
-                                        </p>
-                                    </div>
-                                    </CustomOverlayMap>
-                                )}
-                                </React.Fragment>
+                            {aroundParkingList.map((parkingData, index) => (
+                                    <React.Fragment key={index}>
+                                        <EventMarkerContainer key={index}
+                                            position={{ lat : parkingData.latitude, lng : parkingData.longitude}}
+                                            parkingData={parkingData}
+                                        />
+                                    </React.Fragment>
                             ))}
                     <div className={classes.side_bar_container}>
                         <motion.div 

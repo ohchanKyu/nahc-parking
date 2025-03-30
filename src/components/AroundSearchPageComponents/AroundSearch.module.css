@@ -91,6 +91,14 @@
     font-family: "Noto Sans KR", sans-serif;
     text-align: center;
 }
+.open{
+    color:#0aba16;
+    margin-left: 5px;
+}
+.closed{
+    color:red;
+    margin-left: 5px;
+}
 .traffic_time,.traffic_info{
     width:50%;
     text-align: center;

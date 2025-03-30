@@ -4,8 +4,8 @@ import { reIssueTokenService } from "./AuthService";
 
 const apiClient = axios.create({
   baseURL: window.location.hostname === 'localhost' 
-  ? 'http://localhost:8080/test/parking-lot' 
-  : `${import.meta.env.VITE_BACKEND_URL}/test/parking-lot`,
+  ? 'http://localhost:8080/parking-lot' 
+  : `${import.meta.env.VITE_BACKEND_URL}/parking-lot`,
     withCredentials: true,
     headers: {
       'Content-Type': `application/json`,
@@ -169,7 +169,6 @@ export const getAllParkingLotService = async () => {
 export const getParkingLotByLevelService = async (coordinateRequest, level) => {
 
     try{
-        console.log(coordinateRequest);
         const parkingLotResponse = await apiClient.post(`/around/${level}`,coordinateRequest);
         return await parkingLotResponse.data;
     }catch(error){

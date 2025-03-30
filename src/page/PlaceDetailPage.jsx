@@ -3,7 +3,7 @@ import classes from "./PlaceDetailPage.module.css";
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import RoadView from "../components/PlaceDetailPageComponents/RoadView";
-// import PlaceDetailContent from "../components/PlaceDetailPageComponents/PlaceDetailContent";
+import PlaceDetailContent from "../components/PlaceDetailPageComponents/PlaceDetailContent";
 import { FaRegStar, FaStar } from "react-icons/fa";
 import { getBookmarkService, addBookmarkService, deleteBookmarkService } from "../api/BookmarkService";
 import { getParkingLotByIdSerivce } from "../api/ParkingLotService";
@@ -110,7 +110,6 @@ const PlaceDetailPage = () => {
             } 
             const parkingLotResponse = await getParkingLotByIdSerivce(id);
             if (parkingLotResponse.success){
-                console.log(parkingLotResponse.data);
                 setParkingLot(parkingLotResponse.data);
             }else{
                 const errorMessage = parkingLotResponse.message;
@@ -161,7 +160,7 @@ const PlaceDetailPage = () => {
                 </p>
                 <RoadView location={location} />
             </div>
-            {/* <PlaceDetailContent setTitle={setTitle} /> */}
+            <PlaceDetailContent item={parkingLot} />
         </React.Fragment>
     );
 };

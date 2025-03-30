@@ -3,12 +3,16 @@ import classes from "./SearchTab.module.css";
 import { CiSearch } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
 
-const Search = () => {
+const Search = (props) => {
 
     const navigate = useNavigate();
 
     const goSearchPageHandler = () => {
-        navigate('/search');
+        const params = new URLSearchParams({
+            latitude : props.location.latitude,
+            longitude: props.location.longitude
+        }).toString();
+        navigate(`/search?${params}`);
     };
 
     return (
