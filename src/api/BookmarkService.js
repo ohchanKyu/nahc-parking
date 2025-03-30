@@ -5,7 +5,7 @@ import { reIssueTokenService } from "./AuthService";
 const apiClient = axios.create({
   baseURL: window.location.hostname === 'localhost' 
   ? 'http://localhost:8080/parking-lot/bookmark' 
-  : `${import.meta.env.VITE_BACKEND_URL}/auth/api/user`,
+  : `${import.meta.env.VITE_BACKEND_URL}/parking-lot/bookmark`,
     withCredentials: true,
     headers: {
       'Content-Type': `application/json`,
