@@ -8,18 +8,55 @@ import ProtectedRoute from './store/ProtectedRoute';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AppContainer from './layout/AppContainer';
 import AuthPage from './page/AuthPage';
+import SearchPage from './page/SearchPage';
+import PlaceDetailPage from './page/PlaceDetailPage';
+import BookmarkPage from './page/BookmarkPage';
+import AroundSearchPage from './page/AroundSearchPage';
+
 const router = createBrowserRouter([
 
   { path : '/' , 
     element: (
-      // <ProtectedRoute>
+      <ProtectedRoute>
         <MainPage />
-      // </ProtectedRoute>
+      </ProtectedRoute>
     ),
   },
   {
     path : '/auth',
     element : <AuthPage/>
+  },
+  {
+    path : '/search',
+    element: (
+      <ProtectedRoute>
+        <SearchPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path : '/detail',
+    element: (
+      <ProtectedRoute>
+        <PlaceDetailPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path : '/bookmark',
+    element: (
+      <ProtectedRoute>
+        <BookmarkPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path : '/around',
+    element: (
+      <ProtectedRoute>
+        <AroundSearchPage />
+      </ProtectedRoute>
+    ),
   },
 ]);
 

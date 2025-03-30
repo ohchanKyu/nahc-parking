@@ -2,8 +2,8 @@ import classes from "./MainTab.module.css";
 import { useNavigate } from "react-router-dom";
 import { BsBookmarkStarFill } from "react-icons/bs";
 import { FaParking } from "react-icons/fa";
-import { FaSquarePlus } from "react-icons/fa6";
 import { motion } from "framer-motion";
+import { IoIosChatbubbles } from "react-icons/io";
 
 const MainTab = (props) => {
     
@@ -14,7 +14,7 @@ const MainTab = (props) => {
   };
 
   const goFavoritePage = () => {
-      navigate('/favorite');
+      navigate('/bookmark');
   };
 
     const goAroundSearchPage = () => {
@@ -35,7 +35,7 @@ const MainTab = (props) => {
                         <motion.button
                             onClick={goCustomParkingPage}
                             whileHover={hoverEffect}>
-                            <FaSquarePlus style={{ fontSize:'14px', marginRight:'5px'}}/>  채팅 참여
+                            <IoIosChatbubbles style={{ fontSize:'14px', marginRight:'5px'}}/>  채팅 참여
                         </motion.button>
                 </li>
                 <li key="favorite" className={classes.favorite}>

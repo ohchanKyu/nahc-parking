@@ -1,0 +1,21 @@
+.mapWrap {
+  margin: 10px;
+  box-shadow: 2px 3px 4px #333;
+}
+.mapWrapper{
+  width: 50%;
+  height: 250px;
+}
+.rvWrapper {
+  width: 100%;
+  height: 250px;
+}
+
+.map{
+  width: 200%;
+  height: 100%;
+}
+.roadview {
+  width: 100%;
+  height: 100%;
+}

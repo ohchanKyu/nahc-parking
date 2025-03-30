@@ -1,6 +1,6 @@
 .container {
     width: 410px;
-    height:820px;
+    min-height:820px;
     position: relative;
     margin: 0 auto;
     background-color: white;

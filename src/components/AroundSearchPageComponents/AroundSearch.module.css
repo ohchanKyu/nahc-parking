@@ -1,0 +1,156 @@
+.container{
+    margin:30px 0;
+}
+.text{
+    width:60%;
+}
+.placeName{
+    text-align: left;
+    font-size:20px;
+    font-weight: bold;
+    font-family: "Noto Sans KR", sans-serif;
+    margin-top:0;
+    margin-bottom: 10px;
+}
+.address, .phoneNumber, .time, .price{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    font-size:13px;
+    word-break: keep-all;
+    font-weight: bold;
+    font-family: "Noto Sans KR", sans-serif;
+    margin:5px 0;
+}
+.traffic_container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #0d147a;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    color:white;
+    font-weight: bold;
+    font-family: "Noto Sans KR", sans-serif;
+    font-size:14px;
+    padding: 20px 20px 0 20px;
+}
+.header_container{
+    margin-top: 15px;
+    padding:10px 20px;
+}
+.wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.button_container{
+    display: flex;
+    flex-direction: column; 
+    align-items: flex-end;
+    height: 100%;
+    width:40%;
+}
+.detail_button, .route_button{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin:5px 0;
+    font-size:13px;
+    border: none;
+    width:100px;
+    padding: 10px 15px;
+    border-radius: 8px;
+    background-color:#0d147a;
+    font-weight:500;
+    font-family: "Noto Sans KR", sans-serif;
+    color:white;
+}
+.capacity{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-top:1px solid #333;
+    margin-top:10px;
+    padding:10px 0;
+}
+.totalCapacity ,.currentCapacity{
+    width:50%;
+    margin:0 auto;
+    font-size:15px;
+    font-weight: bold;
+    font-family: "Noto Sans KR", sans-serif;
+    text-align: center;
+}
+.message{
+    font-size:12px;
+    color:red;
+    margin:3px 0 0 8px;
+    font-weight: bold;
+    font-family: "Noto Sans KR", sans-serif;
+    text-align: center;
+}
+.traffic_time,.traffic_info{
+    width:50%;
+    text-align: center;
+}
+.car_time,.road_time, .car_price,.distance{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.arrow{
+    margin:0 5px;
+}
+.headaer_my{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size:15px;
+    font-weight: bold;
+    font-family: "Noto Sans KR", sans-serif;
+    text-align: center;
+    margin:10px 0;
+}
+.text_my{
+    width:100%;
+}
+.custom_info{
+    display: flex;
+    align-items: center;
+    font-size:14px;
+    word-break: keep-all;
+    font-weight: bold;
+    font-family: "Noto Sans KR", sans-serif;
+    margin:5px 0;
+    padding:10px 0 0 0;
+}
+.description{
+    font-size:14px;
+    word-break: keep-all;
+    font-weight: bold;
+    font-family: "Noto Sans KR", sans-serif;
+    margin:0 0 0 19px;
+}
+.button_container_my{
+    display: flex;
+    justify-content: center;
+    margin:10px 0;
+}
+.route_button_my{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin:5px 0;
+    font-size:13px;
+    border: none;
+    width:90%;
+    padding: 10px 15px;
+    border-radius: 8px;
+    background-color: #0d147a;
+    font-weight:500;
+    font-family: "Noto Sans KR", sans-serif;
+    color:white;
+}

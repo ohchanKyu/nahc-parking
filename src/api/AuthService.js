@@ -3,8 +3,8 @@ import { toast } from "react-toastify";
 
 const apiClient = axios.create({
     baseURL: window.location.hostname === 'localhost' 
-    ? 'http://localhost:9000/auth' 
-    : `${import.meta.env.VITE_VETT_BACKEND_URL}/auth`,
+    ? 'http://localhost:8080/auth' 
+    : `${import.meta.env.VITE_BACKEND_URL}/auth`,
     withCredentials: true,
     headers: {
         'Content-Type': `application/json`,
