@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getParkingLotByKewordService } from '../../api/ParkingLotService';
 import classes from './KeywordForm.module.css';
-import { MdArrowBackIosNew } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 
 const useDebounce = (value, delay) => {

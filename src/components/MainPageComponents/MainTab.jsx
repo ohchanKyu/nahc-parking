@@ -9,8 +9,8 @@ const MainTab = (props) => {
     
   const navigate = useNavigate();
   
-  const goCustomParkingPage = () => {
-      navigate('/custom');
+  const goChattingPage = () => {
+      navigate('/chat');
   };
 
   const goFavoritePage = () => {
@@ -33,7 +33,7 @@ const MainTab = (props) => {
             <ul className={classes.button_container}>
                 <li key="me" className={classes.favorite}>
                         <motion.button
-                            onClick={goCustomParkingPage}
+                            onClick={goChattingPage}
                             whileHover={hoverEffect}>
                             <IoIosChatbubbles style={{ fontSize:'14px', marginRight:'5px'}}/>  채팅 참여
                         </motion.button>

@@ -27,10 +27,10 @@ const BookmarkPage = () => {
     return (
         <React.Fragment>
             <div className={classes.header}>
-            <motion.div whileHover={{ scale : 1.1 }}>
-                    <IoIosArrowBack 
-                        className={classes.back_icon}
-                        onClick={goMainPageHandler}/>
+                <motion.div whileHover={{ scale : 1.1 }}>
+                        <IoIosArrowBack 
+                            className={classes.back_icon}
+                            onClick={goMainPageHandler}/>
                 </motion.div>
                 <h3 className={classes.header_text}># 즐겨찾기</h3>
                 <motion.div whileHover={{ scale : 1.1 }}>

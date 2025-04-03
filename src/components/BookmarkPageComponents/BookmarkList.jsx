@@ -3,10 +3,8 @@ import classes from "./BookmarkList.module.css";
 import { RiErrorWarningFill } from "react-icons/ri";
 import { motion } from "framer-motion";
 import loginContext from '../../store/login-context';
-import { getAllUserBookmarkService, deleteBookmarkService } from "../../api/BookmarkService";
-import { TiDeleteOutline } from "react-icons/ti";
+import { getAllUserBookmarkService } from "../../api/BookmarkService";
 import { toast } from "react-toastify";
-import Bookmark from "./Bookmark";
 import AroundSearch from "../AroundSearchPageComponents/AroundSearch";
 
 const BookmarkList = (props) => {
@@ -16,33 +14,6 @@ const BookmarkList = (props) => {
 
     const loginCtx = useContext(loginContext);
     const memberId = loginCtx.memberId;
-
-    const deleteBookmarkHandler = async (bookmarkId) => {
-
-        const deleteBookmarkResponse = await deleteBookmarkService(bookmarkId);
-        if (deleteBookmarkResponse.data && deleteBookmarkResponse.success){
-            toast.success('즐겨찾기에서 삭제하였습니다!', {
-                position: "top-center",
-                autoClose: 1000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
-        }else{
-            toast.error(`일시적 오류입니다. \n 다시 시도해주세요.`, {
-                position: "top-center",
-                autoClose: 1000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
-        } 
-        fetchBookmarkListData();
-    };
 
     const fetchBookmarkListData = async () => {
 

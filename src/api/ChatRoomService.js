@@ -4,8 +4,8 @@ import { reIssueTokenService } from "./AuthService";
 
 const apiClient = axios.create({
   baseURL: window.location.hostname === 'localhost' 
-  ? 'http://localhost:8080/parking-lot/bookmark' 
-  : `${import.meta.env.VITE_BACKEND_URL}/parking-lot/bookmark`,
+  ? 'http://localhost:8080/chat' 
+  : `${import.meta.env.VITE_BACKEND_URL}/chat`,
     withCredentials: true,
     headers: {
       'Content-Type': `application/json`,
@@ -80,10 +80,55 @@ apiClient.interceptors.response.use(
   }
 );
 
-export const getAllUserBookmarkService = async (memberId, coordinateRequest) => {
+export const isParticipateChatRoomService = async (roomId,memberId) => {
+
     try{
-        const allBookmarkListResponse = await apiClient.post(`/${memberId}`, coordinateRequest);
-        return await allBookmarkListResponse.data;
+        const participateResponse = await apiClient.get(`/room/is-participate/${roomId}/${memberId}`);
+        return await participateResponse.data;
+    }catch(error){
+        if (error.response){
+            return error.response.data;
+        }
+        toast.error(`일시적 네트워크 오류입니다.\n 잠시 후 다시 시도해주세요.`, {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+        return { success : false }
+    }
+}
+
+export const getChatRoomByKeywordService = async (keyword) => {
+
+    try{
+        const chatRoomResponse = await apiClient.get(`/rooms/keyword/${keyword}`);
+        return await chatRoomResponse.data;
+    }catch(error){
+        if (error.response){
+            return error.response.data;
+        }
+        toast.error(`일시적 네트워크 오류입니다.\n 잠시 후 다시 시도해주세요.`, {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+        return { success : false }
+    }
+}
+
+export const createRoomService = async (createChatRoomRequest) => {
+
+    try{
+        const createRoomResponse = await apiClient.post('/room',createChatRoomRequest);
+        return await createRoomResponse.data;
     }catch(error){
         if (error.response){
             return error.response.data;
@@ -101,12 +146,33 @@ export const getAllUserBookmarkService = async (memberId, coordinateRequest) => 
     }
 };
 
-
-export const addBookmarkService = async (memberId,parkingLotId) => {
-
+export const getAllChatRoomsService = async () => {
+   
     try{
-        const addBookmarkResonse = await apiClient.post(`/${memberId}/${parkingLotId}`);
-        return await addBookmarkResonse.data;
+        const chatRoomsData = await apiClient.get('/rooms');
+        return await chatRoomsData.data;
+    }catch(error){
+        if (error.response){
+            return error.response.data;
+        }
+        toast.error(`일시적 네트워크 오류입니다.\n 잠시 후 다시 시도해주세요.`, {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+        return { success : false }
+    }
+}
+
+export const getMyChatRootService = async (memberId) => {
+    
+    try{
+        const myChatRoomsData = await apiClient.get(`/rooms/${memberId}`);
+        return await myChatRoomsData.data;
     }catch(error){
         if (error.response){
             return error.response.data;
@@ -123,11 +189,12 @@ export const addBookmarkService = async (memberId,parkingLotId) => {
         return { success : false }
     }
 };
-export const deleteBookmarkService = async (bookmarkId) => {
+
+export const registerNewMemberToChatRoomService = async (roomId,memberId) => {
 
     try{
-        const deleteBookmarkService = await apiClient.delete(`/${bookmarkId}`);
-        return await deleteBookmarkService.data;
+        const registerResponse = await apiClient.post(`/room/${roomId}/${memberId}`);
+        return await registerResponse.data;
     }catch(error){
         if (error.response){
             return error.response.data;
@@ -143,12 +210,13 @@ export const deleteBookmarkService = async (bookmarkId) => {
         });
         return { success : false }
     }
-};
-export const getBookmarkService = async (memberId,parkingLotId) => {
+}
+
+export const unregisterMemberToChatRoomService = async (roomId,memberId) => {
 
     try{
-        const getBookmarkResponse = await apiClient.get(`/${memberId}/${parkingLotId}`);
-        return await getBookmarkResponse.data;
+        const unregisterResponse = await apiClient.delete(`/room/${roomId}/${memberId}`);
+        return await unregisterResponse.data;
     }catch(error){
         if (error.response){
             return error.response.data;

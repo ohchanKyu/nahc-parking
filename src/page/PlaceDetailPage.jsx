@@ -44,7 +44,6 @@ const PlaceDetailPage = () => {
                 progress: undefined,
             });
             setBookmark(true);
-            setBookmarkId(addBookmarkResponse.data);
         }else{
             const errorMessage = addBookmarkResponse.message;
             toast.error(`일시적 오류입니다. \n ${errorMessage}`, {
@@ -56,6 +55,7 @@ const PlaceDetailPage = () => {
                 draggable: true,
                 progress: undefined,
             });
+            setBookmark(false);
         } 
     };
 
@@ -72,8 +72,7 @@ const PlaceDetailPage = () => {
                 draggable: true,
                 progress: undefined,
             });
-            setBookmark(true);
-            setBookmarkId(deleteBookmarkResponse.data);
+            setBookmark(false);
         }else{
             const errorMessage = deleteBookmarkResponse.message;
             toast.error(`일시적 오류입니다. \n ${errorMessage}`, {
@@ -85,9 +84,8 @@ const PlaceDetailPage = () => {
                 draggable: true,
                 progress: undefined,
             });
+            setBookmark(true);
         } 
-        setBookmark(false);
-        setBookmarkId(null);
     };
 
     useEffect(() => {
@@ -125,7 +123,7 @@ const PlaceDetailPage = () => {
             } 
         };
         fetchBookmarkAndInitialParkingLot();
-    }, [bookmark, bookmarkId]);
+    }, [bookmark]);
 
     return (
         <React.Fragment>

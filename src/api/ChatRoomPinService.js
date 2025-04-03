@@ -4,8 +4,8 @@ import { reIssueTokenService } from "./AuthService";
 
 const apiClient = axios.create({
   baseURL: window.location.hostname === 'localhost' 
-  ? 'http://localhost:8080/parking-lot/bookmark' 
-  : `${import.meta.env.VITE_BACKEND_URL}/parking-lot/bookmark`,
+  ? 'http://localhost:8080/chat/pin' 
+  : `${import.meta.env.VITE_BACKEND_URL}/chat/pin`,
     withCredentials: true,
     headers: {
       'Content-Type': `application/json`,
@@ -80,10 +80,11 @@ apiClient.interceptors.response.use(
   }
 );
 
-export const getAllUserBookmarkService = async (memberId, coordinateRequest) => {
+export const isPinService = async (roomId,memberId) => {
+
     try{
-        const allBookmarkListResponse = await apiClient.post(`/${memberId}`, coordinateRequest);
-        return await allBookmarkListResponse.data;
+        const isPinResponse = await apiClient.get(`/${roomId}/${memberId}`);
+        return await isPinResponse.data;
     }catch(error){
         if (error.response){
             return error.response.data;
@@ -99,14 +100,13 @@ export const getAllUserBookmarkService = async (memberId, coordinateRequest) => 
         });
         return { success : false }
     }
-};
+}
 
-
-export const addBookmarkService = async (memberId,parkingLotId) => {
+export const addPinService = async (roomId,memberId) => {
 
     try{
-        const addBookmarkResonse = await apiClient.post(`/${memberId}/${parkingLotId}`);
-        return await addBookmarkResonse.data;
+        const addPinResponse = await apiClient.post(`/${roomId}/${memberId}`);
+        return await addPinResponse.data;
     }catch(error){
         if (error.response){
             return error.response.data;
@@ -122,12 +122,13 @@ export const addBookmarkService = async (memberId,parkingLotId) => {
         });
         return { success : false }
     }
-};
-export const deleteBookmarkService = async (bookmarkId) => {
+}
+
+export const deletePinService = async (pinId) => {
 
     try{
-        const deleteBookmarkService = await apiClient.delete(`/${bookmarkId}`);
-        return await deleteBookmarkService.data;
+        const deletePinResponse = await apiClient.delete(`/${pinId}`);
+        return await deletePinResponse.data;
     }catch(error){
         if (error.response){
             return error.response.data;
@@ -143,25 +144,4 @@ export const deleteBookmarkService = async (bookmarkId) => {
         });
         return { success : false }
     }
-};
-export const getBookmarkService = async (memberId,parkingLotId) => {
-
-    try{
-        const getBookmarkResponse = await apiClient.get(`/${memberId}/${parkingLotId}`);
-        return await getBookmarkResponse.data;
-    }catch(error){
-        if (error.response){
-            return error.response.data;
-        }
-        toast.error(`일시적 네트워크 오류입니다.\n 잠시 후 다시 시도해주세요.`, {
-            position: "top-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-        });
-        return { success : false }
-    }
-};
+}
