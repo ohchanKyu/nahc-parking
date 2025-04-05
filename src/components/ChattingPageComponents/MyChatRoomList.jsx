@@ -66,7 +66,6 @@ const MyChatRoomList = (props) => {
                 const pinId = await isPinHandler(fetchMyChatRoomResponse[i].roomId);
                 const unreadCountResponse = await getUnreadCountService(fetchMyChatRoomResponse[i].roomId, memberId);
                 const unreadCount = unreadCountResponse.data;
-                console.log(unreadCount);
                 const newChatRoomData = {
                     ...fetchMyChatRoomResponse[i],
                     pinId,

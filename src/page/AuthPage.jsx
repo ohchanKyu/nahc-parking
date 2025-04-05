@@ -35,10 +35,10 @@ const AuthPage = () => {
                 <div className={classes.wrapper}>
                     <div className={classes.auth_form}>
                         <div className={classes.header}>
-                            <h1>VeTT Service</h1>
+                            <h1> S-Parking Service</h1>
                             <p className={classes.description}>
-                                반려동물 병원, 약국, 산책로부터 AI 및 그룹 채팅까지 <br/>
-                                반려동물과 관련된 여러 정보들을 만나보실 수 있습니다. <br/>
+                               {` 주차장과 관련된 여러 정보를 만나보세요!
+                                  실시간으로 다른 사용자와 정보를 공유할 수도 있습니다.`}
                             </p>
                         </div>
                         {type === 1 && <LoginContainer/>}

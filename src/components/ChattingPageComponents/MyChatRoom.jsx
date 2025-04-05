@@ -32,12 +32,13 @@ const MyChatRoom = (props) => {
                 stompClient.current.subscribe(`/sub/chatroom/${roomId}`, (message) => {
                     const newMessageBody = JSON.parse(message.body);
                     setLastMessageInfo((prevInfo) => {
+
                         const time = props.onFormatChatTime(newMessageBody.time);
                         const content = newMessageBody.content;
-                        const unreadCount = newMessageBody.unreadCount
+                        
                         const updatedMessages = {
                             ...prevInfo,
-                            time,content,unreadCount
+                            time,content, unreadCount : prevInfo.unreadCount + 1
                         }
                         return updatedMessages;
                     })
@@ -76,6 +77,9 @@ const MyChatRoom = (props) => {
         };
     }, [props.chatRoom]);
 
+    const Badge = ({ count }) => {
+        return count > 0 ? <span className={classes.badge}>{count}</span> : null;
+    };
 
     return (
         <React.Fragment>
@@ -90,12 +94,15 @@ const MyChatRoom = (props) => {
                     >
                         <div className={classes.chatRoom_card}>
                             <div className={classes.chatRoom_header}>
-                                <div className={classes.chatRoom_text_header}>
-                                    <div className={classes.chatRoom_title_container}>
-                                        <h3 className={classes.chatRoom_title}>{chatRoom.chatTitle} {chatRoom.pinId && <BsPinFill/>}</h3>
-                                    </div>
-                                </div>
                                 <img className={classes.chatRoom_image} src={ChatImg} alt="chat_img" />
+                                <div className={classes.chatRoom_text_header}>
+                                    <h3 className={classes.chatRoom_title}>{chatRoom.pinId && <BsPinFill/>} {chatRoom.chatTitle} </h3>
+                                    {chatRoom.lastMessage && <p className={classes.chatRoom_last_message}>{lastMessageInfo.content}</p>}
+                                </div>
+                                <div className={classes.last_message_container}>
+                                    <p className={classes.last_message_time}>{lastMessageInfo.time}</p>
+                                    <Badge count={lastMessageInfo.unreadCount} />
+                                </div>
                             </div>
                             <div className={classes.chatRoom_info}>
                                 <button onClick={() => props.onUnparticipateChat(chatRoom.roomId)}
@@ -109,12 +116,7 @@ const MyChatRoom = (props) => {
                                     className={classes.chatRoom_isExit}>Pin 등록</button>
                                 )}
                                 <p className={classes.chatRoom_members}>{chatRoom.memberCount}명</p>
-                                <p className={classes.chatRoom_date}>{chatRoom.createdDateTime.split('T')[0]}</p>
-                            </div>
-                            <div className={classes.last_message_container}>
-                                {chatRoom.lastMessage && <p className={classes.chatRoom_last_message}>{lastMessageInfo.content}</p>}
-                                <p className={classes.last_message_time}>{lastMessageInfo.time}</p>
-                                <p className={classes.last_message_time}>{lastMessageInfo.unreadCount}</p>
+                                <p className={classes.chatRoom_date}>{chatRoom.createdDateTime.split('T')[0]} 생성</p>
                             </div>
                             <div className={classes.chatRoom_buttons}>
                                     <button className={classes.chatRoom_joinButton}

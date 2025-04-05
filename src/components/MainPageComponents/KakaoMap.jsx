@@ -1,109 +1,55 @@
-import React,{ useEffect, useState, useRef, useContext } from "react";
+import React,{ useEffect, useState, useRef } from "react";
 import classes from "./KakaoMap.module.css";
 import { FaPlus } from "react-icons/fa";
 import { FaMinus } from "react-icons/fa6";
-import parkingImage from "../../assets/placeholder.png";
-import { Map, MapMarker, CustomOverlayMap } from "react-kakao-maps-sdk";
-import { useNavigate } from "react-router-dom";
+import EventMarkerContainer from "./EventMarkerContainer";
+import { Map, MapMarker } from "react-kakao-maps-sdk";
 import LoadingModal from "../../layout/LoadingModal";
-import { ImExit } from "react-icons/im";
-import { motion } from "framer-motion";
-import { BiCurrentLocation } from "react-icons/bi";
-import { MdShareLocation } from "react-icons/md"
+import KakaoMapSideBar from "./KakaoMapSideBar";
 import { toast } from "react-toastify";
-import Post from "./Post";
-import Modal from "../../layout/Modal";
-import { logoutService } from "../../api/MemberService";
-import loginContext from "../../store/login-context";
-import { getParkingLotByLevelService } from "../../api/ParkingLotService";
-import { getCoordiateByAddressService } from "../../api/LocationService";
-
-
-const isPublicHoliday = (date) => {
-    const holidays = [
-        "01-01", "03-01", "05-05", "06-06", "08-15", "10-03", "10-09", "12-25"
-    ];
-    const formattedDate = `${(date.getMonth() + 1).toString().padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
-    return holidays.includes(formattedDate);
-};
-const getOperatingStatus = (parkingData) => {
-    const now = new Date();
-    const day = now.getDay();
-    const currentTime = now.getHours() * 60 + now.getMinutes();
-
-    let startTime, endTime;
-    if (day === 0 || isPublicHoliday(now)) {
-        startTime = parkingData.holidayStartTime;
-        endTime = parkingData.holidayEndTime;
-    } else if (day >= 1 && day <= 5) {
-        startTime = parkingData.weekdayStartTime;
-        endTime = parkingData.weekdayEndTime;
-    } else {
-        startTime = parkingData.weekendStartTime;
-        endTime = parkingData.weekendEndTime;
-    }
-    if (startTime === "00:00" && endTime === "00:00") return "운영 중";
-    const startMinutes = parseInt(startTime.split(":")[0]) * 60 + parseInt(startTime.split(":")[1]);
-    const endMinutes = parseInt(endTime.split(":")[0]) * 60 + parseInt(endTime.split(":")[1]);
-    return currentTime >= startMinutes && currentTime <= endMinutes ? "운영 중" : "운영 종료";
-};
+import { getTrafficService, getAllParkingLotService } from "../../api/ParkingLotService";
+import TrafficMarkerContainer from "./TrafficMarkerContainer";
+import { findNearbyMarkers, clusterMarkers } from "./Clustering";
+import ClusterMarker from "./ClusterMarker";
+import { AnimatePresence } from "framer-motion";
 
 const { kakao } = window;
+
+const getDistance = (level) => {
+    if (level <= 3) return 1;
+    if (level <= 5) return 2;
+    if (level <= 6) return 4;
+    if (level <= 7) return 7;
+    if (level <= 8) return 14;
+    if (level <= 9) return 21;
+    if (level <= 10) return 30;
+    if (level <= 11) return 40;
+    return 120;
+};
+  
+const getCellSize = (level) => {
+    if (level === 6) return 0.02;
+    if (level === 7) return 0.04;
+    if (level === 8) return 0.08;
+    if (level === 9) return 0.2;
+    if (level === 10) return 0.5;
+    if (level === 11) return 0.8;
+    return 1.6;
+};
+
+const defaultLevel = 5
+const maxLevel = 6
 
 const KakaoMap = (props) => {
 
     const mapRef = useRef(kakao.maps.Map);
-    const defaultLevel = 5
     const [level, setLevel] = useState(defaultLevel);
-    const [aroundParkingList,setAroundParkingList] = useState([]);
-    const [isLoading,setIsLoading] = useState(false);
-    const [postPopup,setPostPopup] = useState(false);
-    const loginCtx = useContext(loginContext);
-
-    const navigate = useNavigate();
-
-    const popupOverlay = () => {
-        setPostPopup(true);
-    };
-    const popupDown = () => {
-        setPostPopup(false);
-    };
-
-    const onComplete = async (data) =>{
-        let fullAddress = data.address;
-        let extraAddress = '';
-
-        if (data.addressType === 'R') {
-            if (data.bname !== '') {
-                extraAddress += data.bname;
-            }
-            if (data.buildingName !== '') {
-                extraAddress += (extraAddress !== '' ? `, ${data.buildingName}` : data.buildingName);
-            }
-            fullAddress += (extraAddress !== '' ? ` (${extraAddress})` : '');
-        }
-        popupDown();
-
-        const coordinateResponse = await getCoordiateByAddressService(fullAddress);
-        if (coordinateResponse.success){
-            const latitude = coordinateResponse.data.latitude;
-            const longitude = coordinateResponse.data.longitude;
-            props.onSet({
-                latitude,longitude
-            })
-        }else{
-            const errorMessage = coordinateResponse.message
-            toast.error(`일시적 오류입니다. \n ${errorMessage}`, {
-                position: "top-center",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
-        }
-    }
+    const [parkingLotList,setParkingLotList] = useState([]);
+    const [trafficInfo,setTrafficInfo] = useState([]);
+    const [clusterGroup, setClusterGroup] = useState([]);
+    const [visibleParkingLots, setVisibleParkingLots] = useState([]);
+    const [visibleTrafficInfo,setVisibleTrafficInfo] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     const handleLevel = (type) => {
         const map = mapRef.current
@@ -118,98 +64,55 @@ const KakaoMap = (props) => {
         }
     }
 
-    const goLogout = async () => {
-        const logoutResponseData = await logoutService();
-        if (logoutResponseData.success){
-            toast.success("로그아웃에 성공하셨습니다.", {
-                position: "top-center",
-                autoClose: 1000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
-        }else{
-            toast.error("로그아웃에 실패하셨습니다. \n 강제로 로그아웃합니다.", {
-            position: "top-center",
-                autoClose: 1000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
-        }
-        loginCtx.logoutUser();
-        navigate('/auth');
-    };
+    const reloadMarkers = () => {
 
-    const fetchCurrentLocation = () => {
-        toast.success("현재 위치로 이동하겠습니다.", {
-            position: "top-center",
-            autoClose: 1000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
+        const map = mapRef.current
+        const position = map.getCenter();
+        const level = map.getLevel();
+        const distance = getDistance(level);
+        const nearbyMarker = findNearbyMarkers({
+            markers : parkingLotList,
+            latitude : position.getLat(),
+            longitude : position.getLng(),
+            maxDistance : distance
         });
-        props.onFetch();
-    };
-
-    const goDetailPlaceHandler = async (parkingInfo) => {
-        const params = new URLSearchParams({
-            latitude : parkingInfo.latitude,
-            longitude : parkingInfo.longitude,
-            id : parkingInfo.id,
-        }).toString();
-        navigate(`/detail?${params}`);
-    };
-    
-    const EventMarkerContainer = ({ position, parkingData }) => {
-        
-        const [isVisible,setIsVisible] = useState(false);
-        
-        const toggleHandler = () => {
-            setIsVisible(prevState => !prevState);
-        };
-        
-        return (
-            <>
-                <CustomOverlayMap position={position} zIndex={900}>
-                        <div 
-                            onClick={toggleHandler}
-                            className={classes.marker_image_box}
-                        >
-                            <img src={parkingImage} className={classes.marker_image}/>
-                        </div>
-                </CustomOverlayMap>
-                <CustomOverlayMap
-                    zIndex={1000}
-                    position={position}>
-                    
-                    {isVisible && (
-                        <div style={{ zIndex : 1000 }} className={classes.customoverlay}>
-                            <p onClick={() => goDetailPlaceHandler(parkingData)}>
-                                <span className={classes.title}>{parkingData.name}</span>
-                                <span className={classes.capacity}>{`현재 주차 가능 대수 : ${parkingData.currentInfo}`}</span>
-                                <span className={`${classes.operatingStatus} ${getOperatingStatus(parkingData) === '운영 중' ? classes.open : classes.closed}`}>{getOperatingStatus(parkingData)}</span>                 </p>
-                        </div>
-                    )}
-                </CustomOverlayMap>
-            </>
-            
-        )
+        if (level >= maxLevel){
+            const clustered  = clusterMarkers(nearbyMarker,getCellSize(level));
+            setClusterGroup(clustered);
+            setVisibleParkingLots([]);
+            setVisibleTrafficInfo([]);
+        }else{
+            setVisibleTrafficInfo(trafficInfo);
+            setClusterGroup([]);
+            setVisibleParkingLots(nearbyMarker);
+        }
     };
 
     useEffect(() => {
-        const getAroundParkingList = async () => {
+        const map = mapRef.current;
+        if (!map) return;
 
+        const onIdle = () => {
+            setLevel(map.getLevel());
+            reloadMarkers();
+        };
+        kakao.maps.event.addListener(map, 'idle', onIdle);
+        return () => {
+            kakao.maps.event.removeListener(map, 'idle', onIdle);
+        };
+    }, [level]);
+
+    useEffect(() => {
+       
+        const getAllParkingList = async () => {
             setIsLoading(true);
-            const parkingLotResponse = await getParkingLotByLevelService(props.location,level);
+            const trafficResponse = await getTrafficService();
+            if (trafficResponse.success){
+                setTrafficInfo(trafficResponse.data);
+            }
+            const parkingLotResponse = await getAllParkingLotService();
             if (parkingLotResponse.success){
-                setAroundParkingList(parkingLotResponse.data);
+                setParkingLotList(parkingLotResponse.data);
                 setIsLoading(false);
             }else{
                 const errorMessage = parkingLotResponse.message;
@@ -223,77 +126,76 @@ const KakaoMap = (props) => {
                     progress: undefined,
                 });
             }
-            setIsLoading(false);
         };
-        getAroundParkingList();
-    },[props.location, level]);
+        getAllParkingList();
+    },[props.location]);
+
+    useEffect(() => {
+        if (mapRef.current && parkingLotList.length > 0) {
+            reloadMarkers();
+        }
+    }, [parkingLotList]);
 
     return (
         <React.Fragment>
-            {postPopup && (
-                    <Modal 
-                        onClose={popupDown}>
-                        <Post onComplete={onComplete}/>
-                    </Modal>
-                )
-            }
-            {!isLoading && (
-                    <Map
-                        id="map"
-                        className={classes.container}
-                        center={{
-                            lat: props.location.latitude,
-                            lng: props.location.longitude,
-                        }}
-                    
-                        level={level}
-                        zoomable={true}
-                        ref={mapRef}>
-                            <MapMarker
-                                position={{
-                                lat: props.location.latitude,
-                                lng: props.location.longitude,
-                                }}
-                            />
-                            {aroundParkingList.map((parkingData, index) => (
-                                    <React.Fragment key={index}>
-                                        <EventMarkerContainer key={index}
-                                            position={{ lat : parkingData.latitude, lng : parkingData.longitude}}
-                                            parkingData={parkingData}
-                                        />
-                                    </React.Fragment>
-                            ))}
-                    <div className={classes.side_bar_container}>
-                        <motion.div 
-                            whileHover={{ scale : 1.1 }}
-                            onClick={fetchCurrentLocation}
-                            className={classes.current_wrapper}>
-                            <BiCurrentLocation className={classes.current_logo}/>
-                        </motion.div>
-                        <motion.div 
-                            whileHover={{ scale : 1.1 }}
-                            onClick={popupOverlay}
-                            className={classes.search_wrapper}>
-                            <MdShareLocation className={classes.search_logo}/>
-                        </motion.div>
-                        <motion.div 
-                            whileHover={{ scale : 1.1 }}
-                            onClick={goLogout}
-                            className={classes.logout_wrapper}>
-                            <ImExit className={classes.logout_logo}/>
-                        </motion.div>
-                    </div>
-                    <div className={classes.button_container}>
-                        <div className={classes.plus_box} onClick={() => handleLevel("decrease")}>
-                            <FaPlus/>
-                        </div> 
-                        <div className={classes.minus_box} onClick={() => handleLevel("increase")}>
-                            <FaMinus/>
-                        </div>
-                    </div>
-                </Map>
-            )}
             {isLoading && <LoadingModal/>}
+            <Map
+                id="map"
+                className={classes.container}
+                center={{
+                    lat: props.location.latitude,
+                    lng: props.location.longitude,
+                }}
+                level={defaultLevel}
+                onZoomChanged={(map) => {
+                    const currentLevel = map.getLevel();
+                    setLevel(currentLevel);
+                }}
+                zoomable={true}
+                ref={mapRef}>
+                    <MapMarker
+                        position={{
+                        lat: props.location.latitude,
+                        lng: props.location.longitude,
+                        }}
+                    />
+                    <AnimatePresence>
+                        {visibleParkingLots.map((parkingData, index) => (
+                            <EventMarkerContainer
+                                key={parkingData.id}
+                                position={{ lat: parkingData.latitude, lng: parkingData.longitude }}
+                                parkingData={parkingData}/>
+                        ))}
+                    </AnimatePresence>
+                    <AnimatePresence>
+                        {clusterGroup.map((cluster, index) => (
+                            <ClusterMarker 
+                                onClick={() => {
+                                    const map = mapRef.current;
+                                    if (map.getLevel() > 3) map.setLevel(map.getLevel() - 1, { animate: true });
+                                    map.setCenter(new kakao.maps.LatLng(cluster.centerLatitude, cluster.centerLongitude));
+                                }}
+                                key={`cluster-${index}`} cluster={cluster} />
+                        ))}
+                    </AnimatePresence>
+                   
+                    {visibleTrafficInfo.map((traffic) => (
+                        <TrafficMarkerContainer key={traffic.poiCode}
+                            trafficData={traffic}
+                        />
+                    ))}
+                <KakaoMapSideBar 
+                    onSet={props.onSet}
+                    onFetch={props.onFetch} />
+                <div className={classes.button_container}>
+                    <div className={classes.plus_box} onClick={() => handleLevel("decrease")}>
+                        <FaPlus/>
+                    </div> 
+                    <div className={classes.minus_box} onClick={() => handleLevel("increase")}>
+                        <FaMinus/>
+                    </div>
+                </div>
+            </Map>
         </React.Fragment>
     )
 };

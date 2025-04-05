@@ -6,6 +6,7 @@ import loginContext from '../../store/login-context';
 import { getAllUserBookmarkService } from "../../api/BookmarkService";
 import { toast } from "react-toastify";
 import AroundSearch from "../AroundSearchPageComponents/AroundSearch";
+import LoadingModal from "../../layout/LoadingModal";
 
 const BookmarkList = (props) => {
 
@@ -48,7 +49,7 @@ const BookmarkList = (props) => {
     
     return (
         <React.Fragment>
-            {isLoading && <p className={classes.loading_message}> 데이터를 불러오는 중입니다.</p>}
+            {isLoading && <LoadingModal/>}
             <p className={classes.count}>총 {bookmarkList.length}건 등록</p>
             {bookmarkList.length === 0 && !isLoading && <p className={classes.message}><RiErrorWarningFill style={{ marginRight:'5px'}}/> 아직 등록된 즐겨찾기가 없습니다.</p>}
             {!isLoading && (

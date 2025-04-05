@@ -101,6 +101,69 @@ export const getAroundParkingLotService = async (coordinateRequest) => {
   }
 };
 
+export const getTrafficService = async () => {
+    try{
+      const trafficResponse = await apiClient.get('/traffic');
+      return await trafficResponse.data;
+  }catch(error){
+      if (error.response){
+          return error.response.data;
+      }
+      toast.error(`일시적 네트워크 오류입니다.\n 잠시 후 다시 시도해주세요.`, {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+      });
+      return { success : false }
+    }
+};
+
+export const getRegionCodesService = async () => {
+    try{
+      const regionCodesResponse = await apiClient.get('/regionCodes');
+      return await regionCodesResponse.data;
+  }catch(error){
+      if (error.response){
+          return error.response.data;
+      }
+      toast.error(`일시적 네트워크 오류입니다.\n 잠시 후 다시 시도해주세요.`, {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+      });
+      return { success : false }
+    }
+};
+
+export const getTypesService = async () => {
+    try{
+      const typeResponse = await apiClient.get('/types');
+      return await typeResponse.data;
+  }catch(error){
+      if (error.response){
+          return error.response.data;
+      }
+      toast.error(`일시적 네트워크 오류입니다.\n 잠시 후 다시 시도해주세요.`, {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+      });
+      return { success : false }
+    }
+};
+
 export const getParkingLotByIdSerivce = async (parkingLotId) => {
   try{
     const parkingLotResponse = await apiClient.get(`/${parkingLotId}`);
@@ -170,6 +233,29 @@ export const getParkingLotByLevelService = async (coordinateRequest, level) => {
 
     try{
         const parkingLotResponse = await apiClient.post(`/around/${level}`,coordinateRequest);
+        return await parkingLotResponse.data;
+    }catch(error){
+        if (error.response){
+            return error.response.data;
+        }
+        toast.error(`일시적 네트워크 오류입니다.\n 잠시 후 다시 시도해주세요.`, {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+        return { success : false }
+    }
+};
+
+
+export const getParkingLotByFilterService = async (filterRequest) => {
+
+    try{
+        const parkingLotResponse = await apiClient.post(`/filter`,filterRequest);
         return await parkingLotResponse.data;
     }catch(error){
         if (error.response){

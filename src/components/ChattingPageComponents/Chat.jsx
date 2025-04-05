@@ -6,7 +6,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Send } from 'lucide-react';
 import { ImExit } from "react-icons/im";
 import { FaCalendarAlt } from "react-icons/fa";
-import { FaUserCircle } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { unreadClearService } from "../../api/ChatService";
 
@@ -308,8 +307,8 @@ const Chat = (props) => {
                                             initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             transition={{ duration: 0.3 }}>
+                                        <p className={classes.name}>{message.name}님</p>
                                         <div className={classes.chat_display}>
-                                            <div className={classes.chat_person_icon}><FaUserCircle/></div>
                                             <div className={`${classes.chat_message} ${classes.chat_message_other}`}>
                                                 {message.content}
                                             </div>

@@ -1,5 +1,5 @@
 .header{
-    margin-top:55px;
+    margin-top:80px;
     text-align: center;
 }
 .header h1 {
@@ -8,13 +8,25 @@
     font-optical-sizing: auto;
     font-size:35px;
     font-style: normal;
-    color:#0710af;
+    color:#0d147a;
+}
+.header_img{
+    width:50px;
+    height: 50px;
+    border-radius: 8px;
+}
+.header_flex{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:15px
 }
 .description{
-    margin-toP:30px;
+    margin-top: 30px;
     color:#333333;
     opacity: 0.8;
     font-size: 15px;
+    white-space: pre-line;
 }
 .form_description{
     font-size:23px;

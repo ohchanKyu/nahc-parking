@@ -8,10 +8,13 @@
   align-items: center;
 }
 .header_name{
-  color:#0d147a;
-  font-size:20px;
+  word-break: keep-all;
+  padding: 0 10px;
+  text-align: center;
+  color: #0d147a;
+  font-size: 20px;
   font-weight: bold;
-  margin:0;
+  margin: 0;
 }
 .back_icon{
   font-size:25px;

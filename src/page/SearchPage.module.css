@@ -24,3 +24,20 @@
     font-size:14px;
     text-align: center;
 }
+  
+.type_container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:15px;
+    margin-top: 20px;
+}
+.type_button{
+    padding:10px 20px;
+    background-color: #0d147a;
+    color:white;
+    font-weight: bold;
+    border:none;
+    font-size:12px;
+    border-radius: 8px;
+}
