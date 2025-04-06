@@ -229,29 +229,6 @@ export const getAllParkingLotService = async () => {
     }
 };
 
-export const getParkingLotByLevelService = async (coordinateRequest, level) => {
-
-    try{
-        const parkingLotResponse = await apiClient.post(`/around/${level}`,coordinateRequest);
-        return await parkingLotResponse.data;
-    }catch(error){
-        if (error.response){
-            return error.response.data;
-        }
-        toast.error(`일시적 네트워크 오류입니다.\n 잠시 후 다시 시도해주세요.`, {
-            position: "top-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-        });
-        return { success : false }
-    }
-};
-
-
 export const getParkingLotByFilterService = async (filterRequest) => {
 
     try{

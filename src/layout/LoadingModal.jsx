@@ -1,6 +1,6 @@
 import React from "react";
 import classes from './LoadingModal.module.css';
-import SpinnerImage from '../assets/Spinner.gif';
+import loadingImage from "../assets/loading.gif";
 
 const LoadingModal = () => {
     return (
@@ -9,7 +9,7 @@ const LoadingModal = () => {
                 <div className={classes.container_text_box}>
                     <h1 className={classes.h1_text_bar}> S-Parking </h1>
                     <p> 데이터를 처리중입니다. <br/>잠시만 기다려주세요. </p>
-                    <img src={SpinnerImage} alt="loading"/>
+                    <img src={loadingImage} alt="loading"/>
                 </div>
             </div>
         </div>
