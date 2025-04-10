@@ -35,7 +35,7 @@ const AuthPage = () => {
                 <div className={classes.wrapper}>
                     <div className={classes.auth_form}>
                         <div className={classes.header}>
-                            <h1> S-Parking Service</h1>
+                            <h1> S-Parking</h1>
                             <p className={classes.description}>
                                {` 주차장과 관련된 여러 정보를 만나보세요!
                                   실시간으로 다른 사용자와 정보를 공유할 수도 있습니다.`}

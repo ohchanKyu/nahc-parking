@@ -11,6 +11,7 @@ const FilterForm = () => {
   const [regionCodes,setRegionCodes] = useState([]);
   const [result,setResult] = useState([]);
   const [isSubmitResult,setIsSubmitResult] = useState(false);
+  const [isSubmit,setIsSubmit] = useState(false);
   const [formData, setFormData] = useState({
     type : '',
     regionCode: '',
@@ -36,6 +37,7 @@ const FilterForm = () => {
   };
 
   const handleSubmit = async (e) => {
+    setIsSubmit(true);
     e.preventDefault();
     if (!formData.regionCode) {
       toast.warning("지역 코드를 선택해주세요.", {
@@ -59,6 +61,7 @@ const FilterForm = () => {
       isCurrent: false,
       isFree: false,
     });
+    setIsSubmit(false);
   };
 
   useEffect(() => {
@@ -142,8 +145,9 @@ const FilterForm = () => {
           </label>
         </div>
         <motion.button 
+          disabled={isSubmit}
           whileHover={{ scale : 1.05 }}
-          type="submit" className={classes.submitButton}>검색하기</motion.button>
+          type="submit" className={classes.submitButton}>{isSubmit ? '검색중...' : '검색하기'}</motion.button>
       </motion.form>
       {isSubmitResult && <FilterResult isSubmit={isSubmitResult} parkingLot={result}/>}
     </>
