@@ -102,8 +102,11 @@
     margin-bottom: 0;
 }
 .last_message_time{
+    text-align: center;
+    word-break: keep-all;
+    max-width: 100px;
     font-size: 12px;
-    color: #888; 
+    color: #888;
     margin-bottom: 0;
 }
 .badge {
