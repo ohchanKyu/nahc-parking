@@ -1,20 +1,19 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import classes from "./KakaoMap.module.css";
-import { ImExit } from "react-icons/im";
 import { BiCurrentLocation } from "react-icons/bi";
 import { MdShareLocation } from "react-icons/md"
-import { logoutService } from "../../api/MemberService";
-import loginContext from "../../store/login-context";
 import { toast } from "react-toastify";
 import { getCoordiateByAddressService } from "../../api/LocationService";
 import Post from "./Post";
 import Modal from "../../layout/Modal";
-
+import { IoIosSettings } from "react-icons/io";
+import { useNavigate } from "react-router-dom";
 
 const KakaoMapSideBar = (props) => {
 
     const [postPopup,setPostPopup] = useState(false);
+    const navigate = useNavigate();
 
     const popupOverlay = () => {
         setPostPopup(true);
@@ -73,33 +72,8 @@ const KakaoMapSideBar = (props) => {
         props.onFetch();
     };
 
-    const loginCtx = useContext(loginContext);
-
-     const goLogout = async () => {
-        const logoutResponseData = await logoutService();
-        if (logoutResponseData.success){
-            toast.success("로그아웃에 성공하셨습니다.", {
-                position: "top-center",
-                autoClose: 1000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
-        }else{
-            toast.error("로그아웃에 실패하셨습니다. \n 강제로 로그아웃합니다.", {
-            position: "top-center",
-                autoClose: 1000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
-        }
-        loginCtx.logoutUser();
-        navigate('/auth');
+    const goSettingPage = async () => {
+        navigate("/setting");
     };
 
     return (
@@ -126,9 +100,9 @@ const KakaoMapSideBar = (props) => {
                 </motion.div>
                 <motion.div 
                     whileHover={{ scale : 1.1 }}
-                    onClick={goLogout}
+                    onClick={goSettingPage}
                     className={classes.logout_wrapper}>
-                    <ImExit className={classes.logout_logo}/>
+                    <IoIosSettings className={classes.logout_logo}/>
                 </motion.div>
             </div>
         </>

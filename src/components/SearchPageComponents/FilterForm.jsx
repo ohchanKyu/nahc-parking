@@ -12,6 +12,7 @@ const FilterForm = () => {
   const [result,setResult] = useState([]);
   const [isSubmitResult,setIsSubmitResult] = useState(false);
   const [isSubmit,setIsSubmit] = useState(false);
+
   const [formData, setFormData] = useState({
     type : '',
     regionCode: '',
@@ -48,7 +49,8 @@ const FilterForm = () => {
           pauseOnHover: false,
           draggable: true,
           progress: undefined,
-      });
+      }); 
+      setIsSubmit(false);
       return;
     }
     const parkingLotResponse = await getParkingLotByFilterService(formData);

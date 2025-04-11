@@ -101,3 +101,47 @@ export const logoutService = async () => {
         return { success : false }
     }
 };
+
+export const getMemberInfoService = async (memberId) => {
+
+  try{
+      const memberResponse = await apiClient.get(`/${memberId}`);
+      return await memberResponse.data;
+  }catch(error){
+      if (error.response){
+          return error.response.data;
+      }
+      toast.error(`일시적 네트워크 오류입니다.\n 잠시 후 다시 시도해주세요.`, {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+      });
+      return { success : false }
+  }
+};
+
+export const deleteMemberService = async (memberId) => {
+
+  try{
+      const deleteResponse = await apiClient.delete(`/${memberId}`);
+      return await deleteResponse.data;
+  }catch(error){
+      if (error.response){
+          return error.response.data;
+      }
+      toast.error(`일시적 네트워크 오류입니다.\n 잠시 후 다시 시도해주세요.`, {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+      });
+      return { success : false }
+  }
+};

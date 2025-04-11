@@ -32,7 +32,7 @@
     color:white;
     font-weight: bold;
     font-family: "Noto Sans KR", sans-serif;
-    font-size:14px;
+    font-size:12px;
     padding: 20px 20px 0 20px;
 }
 .header_container{
@@ -107,6 +107,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    word-break: keep-all;
 }
 .arrow{
     margin:0 5px;

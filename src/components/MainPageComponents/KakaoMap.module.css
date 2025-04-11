@@ -23,9 +23,7 @@
 }
 .logout_logo{
     cursor: pointer;
-    font-size:20px;
-    margin-top: 5px;
-    margin-left: 3px;
+    font-size:25px;
 }
 .search_logo, .current_logo{
     font-size:25px;

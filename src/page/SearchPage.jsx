@@ -20,12 +20,11 @@ const SearchPage = () => {
         setType(type);
     };
     const goMainPageHandler = () => {
-        const params = new URLSearchParams({
-            latitude,
-            longitude
-        }).toString();
-        navigate(`/?${params}`);
+        navigate(-1);
     };
+    const goSettingsPageHandler = () => {
+        navigate('/setting');
+    }
 
     return (
         <React.Fragment>
@@ -35,8 +34,10 @@ const SearchPage = () => {
                         className={classes.back_icon}
                         onClick={goMainPageHandler}/>
                 </motion.div>
-                <h3 className={classes.header_text}># 장소 및 필터 검색</h3>
-                <motion.div whileHover={{ scale : 1.1 }}>
+                <h3 className={classes.header_text}>장소 및 필터 검색</h3>
+                <motion.div 
+                    onClick={goSettingsPageHandler}
+                    whileHover={{ scale : 1.1 }}>
                     <IoIosSettings 
                         className={classes.back_icon}/>
                 </motion.div>

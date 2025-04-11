@@ -21,8 +21,12 @@ const BookmarkPage = () => {
     const { location } = useGeoLocation(geolocationOptions);
 
     const goMainPageHandler = () => {
-        navigate('/');
+        navigate(-1);
     };
+    const goSettingsPageHandler = () => {
+        navigate('/setting');
+    }
+
 
     return (
         <React.Fragment>
@@ -32,8 +36,10 @@ const BookmarkPage = () => {
                             className={classes.back_icon}
                             onClick={goMainPageHandler}/>
                 </motion.div>
-                <h3 className={classes.header_text}># 즐겨찾기</h3>
-                <motion.div whileHover={{ scale : 1.1 }}>
+                <h3 className={classes.header_text}>즐겨찾기</h3>
+                <motion.div 
+                    onClick={goSettingsPageHandler}
+                    whileHover={{ scale : 1.1 }}>
                     <IoIosSettings 
                         className={classes.back_icon}/>
                 </motion.div>

@@ -22,6 +22,7 @@ const AroundSearch = (props) => {
         const formattedDate = `${(date.getMonth() + 1).toString().padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
         return holidays.includes(formattedDate);
     };
+
     const currentOperatingStatus = () => {
         const now = new Date();
         const day = now.getDay();
@@ -38,7 +39,9 @@ const AroundSearch = (props) => {
         }
         return { startTime, endTime };
     }
+
     const getOperatingStatus = () => {
+        
         const now = new Date();
         const day = now.getDay();
         const currentTime = now.getHours() * 60 + now.getMinutes();

@@ -27,6 +27,7 @@
     "react-kakao-maps-sdk": "^1.1.27",
     "react-router-dom": "^7.1.5",
     "react-toastify": "^11.0.3",
+    "react-window": "^1.8.11",
     "sockjs-client": "^1.6.1",
     "sweetalert2": "^11.16.0"
   },

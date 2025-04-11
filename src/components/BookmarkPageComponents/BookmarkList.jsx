@@ -21,7 +21,6 @@ const BookmarkList = (props) => {
         setIsLoading(true);
         const bookmarkResponse = await getAllUserBookmarkService(memberId,props.location);
         if (bookmarkResponse.success){
-            console.log(bookmarkResponse.data);
             setBookmarkList(bookmarkResponse.data);
         }else{
             const errorMessage = bookmarkResponse.message;

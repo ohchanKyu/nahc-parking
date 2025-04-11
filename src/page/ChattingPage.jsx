@@ -8,7 +8,6 @@ import loginContext from "../store/login-context";
 import AllChatRoomList from "../components/ChattingPageComponents/AllChatRoomList";
 import MyChatRoomList from "../components/ChattingPageComponents/MyChatRoomList";
 import Chat from "../components/ChattingPageComponents/Chat";
-import { IoIosChatbubbles } from "react-icons/io";
 import KeywordRoomForm from "../components/ChattingPageComponents/KeywordRoomForm";
 import { unreadClearService } from "../api/ChatService";
 
@@ -48,6 +47,10 @@ const ChattingPage = () => {
         setType(type);
     };
     
+    const goSettingPageHandler = () => {
+        navigate('/setting');
+    };
+
     const executeChatHandler = async (chatRoom) => {
         const unreadCountClearResponse = await unreadClearService(
             chatRoom.roomId,loginCtx.memberId);
@@ -63,19 +66,20 @@ const ChattingPage = () => {
     };
 
     const goMainPageHandler = () => {
-        navigate('/');
+        navigate(-1);
     };
 
     return (
         <React.Fragment>
             <div className={classes.header}>
-                <motion.div whileHover={{ scale : 1.1 }}>
+                <motion.div whileHover={{ scale : 1.1 }}
+                    >
                         <IoIosArrowBack 
                             className={classes.back_icon}
                             onClick={goMainPageHandler}/>
                 </motion.div>
-                <h3 className={classes.header_text}><IoIosChatbubbles/> 채팅 참여 </h3>
-                <motion.div whileHover={{ scale : 1.1 }}>
+                <h3 className={classes.header_text}>채팅 참여 </h3>
+                <motion.div whileHover={{ scale : 1.1 }} onClick={goSettingPageHandler}>
                     <IoIosSettings 
                         className={classes.back_icon}/>
                 </motion.div>

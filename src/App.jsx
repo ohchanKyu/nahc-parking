@@ -13,6 +13,7 @@ import PlaceDetailPage from './page/PlaceDetailPage';
 import BookmarkPage from './page/BookmarkPage';
 import AroundSearchPage from './page/AroundSearchPage';
 import ChattingPage from './page/ChattingPage';
+import SettingPage from './page/SettingPage';
 
 const router = createBrowserRouter([
 
@@ -64,6 +65,14 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <ChattingPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path : '/setting',
+    element: (
+      <ProtectedRoute>
+        <SettingPage />
       </ProtectedRoute>
     ),
   },
