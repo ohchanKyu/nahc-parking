@@ -31,11 +31,9 @@
     max-height: 600px;
     width: 80%;
 }
-
 .chatRoom_list::-webkit-scrollbar{
     width: 10px;
 }
-
 .chatRoom_list::-webkit-scrollbar-thumb{
     background-color: rgba(120, 80, 200, 0.5);
     border-radius: 10px;
