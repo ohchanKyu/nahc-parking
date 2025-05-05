@@ -1,6 +1,6 @@
 import React ,{ useEffect, useState } from "react";
 import classes from "./ChatRoomList.module.css";
-import { createRoomService, getAllChatRoomsService, getChatRoomByKeywordService,
+import { createRoomService, getAllChatRoomsService,
     getMyChatRootService, registerNewMemberToChatRoomService } from '../../api/ChatRoomService';
 import ChatImg from "../../assets/chat.png";
 import { motion, AnimatePresence } from "framer-motion";

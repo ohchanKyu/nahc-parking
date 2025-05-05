@@ -1,6 +1,7 @@
 import { CustomOverlayMap } from "react-kakao-maps-sdk";
 import classes from "./KakaoMap.module.css";
 import { motion } from "framer-motion";
+
 const ClusterMarker = ({ cluster, onClick  }) => {
     return (
         <CustomOverlayMap

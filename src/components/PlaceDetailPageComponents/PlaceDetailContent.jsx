@@ -4,6 +4,7 @@ import classes from "./PlaceDetailContent.module.css";
 import { MdAttachMoney } from "react-icons/md";
 
 const PlaceDetailContent = ({ item }) => {
+    
     const isPublicHoliday = (date) => {
         const holidays = [
             "01-01", "03-01", "05-05", "06-06", "08-15", "10-03", "10-09", "12-25"

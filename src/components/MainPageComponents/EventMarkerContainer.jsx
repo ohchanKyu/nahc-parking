@@ -4,6 +4,7 @@ import parkingImage from "../../assets/placeholder.png";
 import { CustomOverlayMap } from "react-kakao-maps-sdk";
 import classes from "./KakaoMap.module.css";
 import { motion } from "framer-motion";
+
 const isPublicHoliday = (date) => {
     const holidays = [
         "01-01", "03-01", "05-05", "06-06", "08-15", "10-03", "10-09", "12-25"

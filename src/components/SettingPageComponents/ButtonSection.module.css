@@ -93,4 +93,5 @@
 .check_one, .check_two{
     font-size:14px;
     margin:5px 0;
+    word-break: keep-all;
 }

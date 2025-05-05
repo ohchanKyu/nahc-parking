@@ -1,6 +1,7 @@
 import React from "react";
 import { CustomOverlayMap, Circle } from "react-kakao-maps-sdk";
 import { motion } from "framer-motion";
+
 const TrafficMarkerContainer = ({ trafficData }) => {
         
     let strokeColor = "";

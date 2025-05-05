@@ -13,9 +13,6 @@ const SearchPage = () => {
     const [searchParams] = useSearchParams();
     const [type,setType] = useState(0);
 
-    const latitude = searchParams.get('latitude');
-    const longitude = searchParams.get('longitude');
-    
     const setTypeHandler = (type) => {
         setType(type);
     };
