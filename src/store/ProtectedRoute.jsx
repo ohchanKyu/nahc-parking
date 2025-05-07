@@ -9,8 +9,8 @@ const ProtectedRoute = ({ children }) => {
 
     const [isTokenValid, setIsTokenValid] = useState(null);
     const [isRefreshingToken, setIsRefreshingToken] = useState(false);
-    const accessToken = localStorage.getItem('accessToken');
-    const refreshToken = localStorage.getItem('refreshToken');
+    const accessToken = sessionStorage.getItem('accessToken');
+    const refreshToken = sessionStorage.getItem('refreshToken');
     const loginCtx = useContext(loginContext);
     const location = useLocation();
     
@@ -32,8 +32,8 @@ const ProtectedRoute = ({ children }) => {
             const newAccessToken = reissueTokenResponseData.data.accessToken;
             const newRefreshToken = reissueTokenResponseData.data.refreshToken;
             saveLoginContextHandler(newAccessToken);
-            localStorage.setItem("accessToken", newAccessToken);
-            localStorage.setItem("refreshToken", newRefreshToken);
+            sessionStorage.setItem("accessToken", newAccessToken);
+            sessionStorage.setItem("refreshToken", newRefreshToken);
             setIsTokenValid(true);
         }else{
             const statusCode = reissueTokenResponseData.statusCode;
@@ -59,8 +59,8 @@ const ProtectedRoute = ({ children }) => {
                     progress: undefined,
                 });
             }
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("refreshToken");
+            sessionStorage.removeItem("accessToken");
+            sessionStorage.removeItem("refreshToken");
             setIsTokenValid(false);
         }
         setIsRefreshingToken(false);
@@ -68,7 +68,7 @@ const ProtectedRoute = ({ children }) => {
 
     useEffect(() => {
         if (!accessToken) {
-            localStorage.removeItem("refreshToken");
+            sessionStorage.removeItem("refreshToken");
             setIsTokenValid(false);
             return;
         }
@@ -79,7 +79,7 @@ const ProtectedRoute = ({ children }) => {
 
             if (decodedToken.exp < currentTime) {
                 if (!refreshToken) {
-                    localStorage.removeItem("accessToken");
+                    sessionStorage.removeItem("accessToken");
                     setIsTokenValid(false);
                 } else {
                     console.log(`Update refreshToken - ${refreshToken}`);
@@ -107,8 +107,8 @@ const ProtectedRoute = ({ children }) => {
                 draggable: true,
                 progress: undefined,
             });
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("refreshToken");
+            sessionStorage.removeItem("accessToken");
+            sessionStorage.removeItem("refreshToken");
             setIsTokenValid(false);
         }
     }, [accessToken, refreshToken, location.pathname]);

@@ -37,8 +37,8 @@ const LoginProvider = (props) => {
     };
 
     const logoutHandler = () => {
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken"); 
+        sessionStorage.removeItem("accessToken");
+        sessionStorage.removeItem("refreshToken"); 
         dispatchUserAction({
             type : 'LOGOUT',
         })
