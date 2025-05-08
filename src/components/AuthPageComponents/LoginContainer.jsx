@@ -16,8 +16,8 @@ const LoginContainer = () => {
             const accessToken = tokenData.accessToken;
             const refreshToken = tokenData.refreshToken;
 
-            sessionStorage.setItem('accessToken',accessToken);
-            sessionStorage.setItem('refreshToken',refreshToken);
+            window.sessionStorage.setItem('accessToken',accessToken);
+            window.sessionStorage.setItem('refreshToken',refreshToken);
             navigate('/')
         }else{
             const message = signinResponseData.message;

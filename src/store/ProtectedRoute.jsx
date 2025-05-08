@@ -9,8 +9,8 @@ const ProtectedRoute = ({ children }) => {
 
     const [isTokenValid, setIsTokenValid] = useState(null);
     const [isRefreshingToken, setIsRefreshingToken] = useState(false);
-    const accessToken = sessionStorage.getItem('accessToken');
-    const refreshToken = sessionStorage.getItem('refreshToken');
+    const accessToken = window.sessionStorage.getItem('accessToken');
+    const refreshToken = window.sessionStorage.getItem('refreshToken');
     const loginCtx = useContext(loginContext);
     const location = useLocation();
     
@@ -32,8 +32,8 @@ const ProtectedRoute = ({ children }) => {
             const newAccessToken = reissueTokenResponseData.data.accessToken;
             const newRefreshToken = reissueTokenResponseData.data.refreshToken;
             saveLoginContextHandler(newAccessToken);
-            sessionStorage.setItem("accessToken", newAccessToken);
-            sessionStorage.setItem("refreshToken", newRefreshToken);
+            window.sessionStorage.setItem("accessToken", newAccessToken);
+            window.sessionStorage.setItem("refreshToken", newRefreshToken);
             setIsTokenValid(true);
         }else{
             const statusCode = reissueTokenResponseData.statusCode;
@@ -59,8 +59,8 @@ const ProtectedRoute = ({ children }) => {
                     progress: undefined,
                 });
             }
-            sessionStorage.removeItem("accessToken");
-            sessionStorage.removeItem("refreshToken");
+            window.sessionStorage.removeItem("accessToken");
+            window.sessionStorage.removeItem("refreshToken");
             setIsTokenValid(false);
         }
         setIsRefreshingToken(false);
@@ -68,7 +68,7 @@ const ProtectedRoute = ({ children }) => {
 
     useEffect(() => {
         if (!accessToken) {
-            sessionStorage.removeItem("refreshToken");
+            window.sessionStorage.removeItem("refreshToken");
             setIsTokenValid(false);
             return;
         }
@@ -79,7 +79,7 @@ const ProtectedRoute = ({ children }) => {
 
             if (decodedToken.exp < currentTime) {
                 if (!refreshToken) {
-                    sessionStorage.removeItem("accessToken");
+                    window.sessionStorage.removeItem("accessToken");
                     setIsTokenValid(false);
                 } else {
                     console.log(`Update refreshToken - ${refreshToken}`);
@@ -107,8 +107,8 @@ const ProtectedRoute = ({ children }) => {
                 draggable: true,
                 progress: undefined,
             });
-            sessionStorage.removeItem("accessToken");
-            sessionStorage.removeItem("refreshToken");
+            window.sessionStorage.removeItem("accessToken");
+            window.sessionStorage.removeItem("refreshToken");
             setIsTokenValid(false);
         }
     }, [accessToken, refreshToken, location.pathname]);

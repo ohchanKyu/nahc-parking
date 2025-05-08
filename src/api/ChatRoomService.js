@@ -14,7 +14,7 @@ const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
     (config) => {
-      const accessToken = sessionStorage.getItem('accessToken');
+      const accessToken = window.sessionStorage.getItem('accessToken');
       if (accessToken) {
         config.headers.Authorization = `Bearer ${accessToken}`;
       }
@@ -31,14 +31,14 @@ apiClient.interceptors.response.use(
     if (error.response && error.response.headers['token-error-message']) {
       const tokenErrorMessage = error.response.headers['token-error-message'];
       if (tokenErrorMessage === 'Token Expired') {
-        const refreshToken = sessionStorage.getItem('refreshToken');
+        const refreshToken = window.sessionStorage.getItem('refreshToken');
         const reissueTokenResponseData = await reIssueTokenService({ refreshToken });
 
         if (reissueTokenResponseData.success){
             const newAccessToken = reissueTokenResponseData.data.accessToken;
             const newRefreshToken = reissueTokenResponseData.data.refreshToken;
-            sessionStorage.setItem("accessToken", newAccessToken);
-            sessionStorage.setItem("refreshToken", newRefreshToken);
+            window.sessionStorage.setItem("accessToken", newAccessToken);
+            window.sessionStorage.setItem("refreshToken", newRefreshToken);
             error.config.headers.Authorization = `Bearer ${newAccessToken}`;
             return axios(error.config);
 
@@ -52,8 +52,8 @@ apiClient.interceptors.response.use(
                 draggable: true,
                 progress: undefined,
             });
-            sessionStorage.removeItem("accessToken");
-            sessionStorage.removeItem("refreshToken"); 
+            window.sessionStorage.removeItem("accessToken");
+            window.sessionStorage.removeItem("refreshToken"); 
             setTimeout(() => {
                 window.location.href = '/auth';
             },2000)
@@ -68,8 +68,8 @@ apiClient.interceptors.response.use(
             draggable: true,
             progress: undefined,
         });
-        sessionStorage.removeItem("accessToken");
-        sessionStorage.removeItem("refreshToken"); 
+        window.sessionStorage.removeItem("accessToken");
+        window.sessionStorage.removeItem("refreshToken"); 
         setTimeout(() => {
             window.location.href = '/auth';
         },2000)

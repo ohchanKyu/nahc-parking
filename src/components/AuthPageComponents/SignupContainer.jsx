@@ -15,8 +15,8 @@ const SignupContainer = () => {
             const accessToken = tokenData.accessToken;
             const refreshToken = tokenData.refreshToken;
 
-            sessionStorage.setItem('accessToken',accessToken);
-            sessionStorage.setItem('refreshToken',refreshToken);
+            window.sessionStorage.setItem('accessToken',accessToken);
+            window.sessionStorage.setItem('refreshToken',refreshToken);
             
             toast.success("회원가입에 성공하셨습니다.", {
                 position: "top-center",
