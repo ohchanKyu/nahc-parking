@@ -29,7 +29,7 @@
     overflow-y: auto;
     overflow-x: hidden;
     max-height: 600px;
-    width: 80%;
+    width: 85%;
 }
 
 .chatRoom_list::-webkit-scrollbar{
